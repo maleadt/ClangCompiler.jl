@@ -68,7 +68,7 @@ end
     cgm = get_codegen_module(I)
 
     i8 = LLVM.LLVMType(convertTypeForMemory(cgm, CC.BoolTy(ctx)))
-    @test LLVM.width(i8) == 8
+    @test i8.width == 8
 
     dispose(I)
 end

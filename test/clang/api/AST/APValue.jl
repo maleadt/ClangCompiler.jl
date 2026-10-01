@@ -48,7 +48,7 @@ using Test
     @test f(I, "cf")
     cf_init = CC.getInit(CC.VarDecl(get_decl(f)))
     gvf = CC.LLVM.GenericValue(CC.EvaluateAsFloat(cf_init, ctx))
-    @test CC.LLVM.intwidth(gvf) == 32                  # APFloat bits (bitcastToAPInt)
+    @test gvf.intwidth == 32                  # APFloat bits (bitcastToAPInt)
     @test reinterpret(Float32, convert(UInt32, gvf)) == 1.5f0
     CC.LLVM.dispose(gvf)
 
@@ -112,7 +112,7 @@ end
     @test CC.getKind(av_flt) == CC.LibClangEx.CXAPValueKind_Float
     @test CC.isFloat(av_flt)
     gv_f = CC.LLVM.GenericValue(CC.getFloat(av_flt))
-    @test CC.LLVM.intwidth(gv_f) == 32
+    @test gv_f.intwidth == 32
     @test reinterpret(Float32, convert(UInt32, gv_f)) == 1.5f0
     CC.LLVM.dispose(gv_f)
 
@@ -308,7 +308,7 @@ end
     v_cf = valueof("pv_cdouble")
     @test CC.isComplexFloat(v_cf)
     gv = CC.LLVM.GenericValue(CC.getComplexFloatReal(v_cf))
-    @test CC.LLVM.intwidth(gv) == 64
+    @test gv.intwidth == 64
     @test reinterpret(Float64, convert(UInt64, gv)) == 1.5
     CC.LLVM.dispose(gv)
     gv = CC.LLVM.GenericValue(CC.getComplexFloatImag(v_cf))

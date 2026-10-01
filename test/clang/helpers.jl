@@ -131,7 +131,7 @@ using Test
     ft = CC.LLVM.FunctionType(CC.LLVM.VoidType())
     mod1 = CC.LLVM.Module("covhelp_mod1")
     CC.LLVM.Function(mod1, "covhelp_llfn", ft)
-    @test CC.LLVM.name(CC.lookup_function(mod1, "covhelp_llfn")) == "covhelp_llfn"
+    @test CC.lookup_function(mod1, "covhelp_llfn").name == "covhelp_llfn"
 
     mod2 = CC.LLVM.Module("covhelp_mod2")
     CC.LLVM.Function(mod2, "covhelp_llfn2", ft)
@@ -166,11 +166,11 @@ end
     fn = CC.LLVM.Function(mod, "chf_llfn", ft)
     bb = CC.LLVM.BasicBlock(fn, "entry")
     builder = CC.LLVM.IRBuilder()
-    CC.LLVM.position!(builder, bb)
+    CC.LLVM.position!(builder, CC.LLVM.at_end(bb))
     CC.LLVM.ret!(builder)
     CC.LLVM.dispose(builder)
     ee = CC.LLVM.Interpreter(mod)
-    @test CC.LLVM.name(CC.lookup_function(ee, "chf_llfn")) == "chf_llfn"
+    @test CC.lookup_function(ee, "chf_llfn").name == "chf_llfn"
     CC.LLVM.dispose(ee)
     CC.LLVM.dispose(llctx)
 end

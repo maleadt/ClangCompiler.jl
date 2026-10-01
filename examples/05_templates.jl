@@ -209,7 +209,7 @@ try
             v = LLVM.GenericValue(CC.getAsIntegral(a))
             println("  [", i, "] ", kind, "  ->  ", convert(Int, v), " : ",
                     CC.getAsString(CC.getIntegralType(a)), " (",
-                    LLVM.intwidth(v), " bits)")
+                    v.intwidth, " bits)")
         end
     end
 
