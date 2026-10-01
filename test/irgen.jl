@@ -354,12 +354,9 @@ end
         i32 = LLVM.Int32Type()
         fn = LLVM.Function(mod, "irg_grafted", LLVM.FunctionType(i32, [i32]))
         entry = LLVM.BasicBlock(fn, "entry")
-        builder = LLVM.IRBuilder()
-        try
+        LLVM.@dispose builder=LLVM.IRBuilder() begin
             LLVM.position!(builder, LLVM.at_end(entry))
             LLVM.ret!(builder, LLVM.mul!(builder, fn.parameters[1], LLVM.ConstantInt(i32, 3)))
-        finally
-            LLVM.dispose(builder)
         end
     end
 

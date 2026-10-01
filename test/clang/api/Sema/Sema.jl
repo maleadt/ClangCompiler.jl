@@ -890,7 +890,7 @@ end
     @test sad.ptr == C_NULL || CC.getDeclKindName(sad) == "StaticAssert"
 
     # --- an integral template argument re-expressed as an expression ---
-    gv = CC.LLVM.GenericValue(CC.MakeIntValue(ctx, 7, intty))
+    gv = CC.LLVM.adopt(CC.LLVM.GenericValue(CC.MakeIntValue(ctx, 7, intty)))
     targ = CC.TemplateArgument(ctx, gv, intty)
     CC.LLVM.dispose(gv)
     @test CC.getKind(targ) == CC.LibClangEx.CXTemplateArgument_Integral
@@ -900,7 +900,7 @@ end
     nttp_lit = CC.resolve(nttp)
     @test nttp_lit isa CC.IntegerLiteral
     @test CC.getType(nttp).ptr == intty.ptr
-    nttp_gv = CC.LLVM.GenericValue(CC.getValue(nttp_lit))
+    nttp_gv = CC.LLVM.adopt(CC.LLVM.GenericValue(CC.getValue(nttp_lit)))
     @test convert(Int, nttp_gv) == 7
     CC.LLVM.dispose(nttp_gv)
     # a type argument would reach clang's llvm_unreachable, so the wrapper stops it here
@@ -4871,7 +4871,7 @@ end
     ed = CC.EnumDecl(get_tag(f))
 
     inflag(n, mask=false) = begin
-        gv = CC.LLVM.GenericValue(CC.MakeIntValue(ctx, n, intty))
+        gv = CC.LLVM.adopt(CC.LLVM.GenericValue(CC.MakeIntValue(ctx, n, intty)))
         r = CC.IsValueInFlagEnum(sema, ed, gv, mask)
         CC.LLVM.dispose(gv)
         r

@@ -1148,7 +1148,7 @@ end
     @test CC.getMemberPointerPathAdjustment(ctx, mp_val) == 0
 
     # ---------- MakeIntValue: APSInt across the LLVM-C bridge ----------
-    gv = CC.LLVM.GenericValue(CC.MakeIntValue(ctx, 42, int_qt))
+    gv = CC.LLVM.adopt(CC.LLVM.GenericValue(CC.MakeIntValue(ctx, 42, int_qt)))
     @test convert(Int, gv) == 42
     CC.LLVM.dispose(gv)
 
