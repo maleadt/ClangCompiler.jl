@@ -571,12 +571,12 @@ end
         @test length(ecs) == 2
         v = CC.getInitVal(ecs[1])
         @test v != C_NULL
-        CC.LLVM.API.LLVMDisposeGenericValue(v)
+        CC.LLVM.dispose(CC.LLVM.GenericValue(v))
         (vmax, vmin) = CC.getValueRange(ed)
         @test vmax != C_NULL
         @test vmin != C_NULL
-        CC.LLVM.API.LLVMDisposeGenericValue(vmax)
-        CC.LLVM.API.LLVMDisposeGenericValue(vmin)
+        CC.LLVM.dispose(CC.LLVM.GenericValue(vmax))
+        CC.LLVM.dispose(CC.LLVM.GenericValue(vmin))
 
         # --- StaticAssertDecl (DeclCXX) reached by walking the TU ---
         tu = CC.getTranslationUnitDecl(ctx)

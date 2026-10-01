@@ -2033,8 +2033,8 @@ end
         CC.setInitVal(fresh, ctx, v_blue, false)
         @test CC.getEnumConstantDeclValue(fresh) == CC.getEnumConstantDeclValue(ecs[2])
         @test CC.getEnumConstantDeclValue(fresh) != CC.getEnumConstantDeclValue(ecs[1])
-        CC.LLVM.API.LLVMDisposeGenericValue(v_red)
-        CC.LLVM.API.LLVMDisposeGenericValue(v_blue)
+        CC.LLVM.dispose(CC.LLVM.GenericValue(v_red))
+        CC.LLVM.dispose(CC.LLVM.GenericValue(v_blue))
 
         # ---------------- setTemplateParameterListsInfo ----------------
         ctd = CC.ClassTemplateDecl(look("DGTmpl"))

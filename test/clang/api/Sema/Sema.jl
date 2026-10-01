@@ -3081,14 +3081,16 @@ end
     # --- A member initializer built from a literal the test itself makes.
     # IntegerLiteral::Create takes the APInt through the LLVMGenericValueRef bridge
     # (MARSHALLING.md §1), not a Julia integer, so the value is built as one first.
-    gv = CC.LLVM.API.LLVMCreateGenericValueOfInt(CC.LLVM.API.LLVMInt32Type(), 5, 0)
+    gv = CC.LLVM.Context() do _
+        CC.LLVM.GenericValue(CC.LLVM.Int32Type(), 5)
+    end
     literal = CC.IntegerLiteral(ctx, gv, CC.getType(without_init), loc)
     meminit = CC.BuildMemberInitializer(sema, without_init, literal, loc)
     @test meminit isa CC.CXXCtorInitializer
     @test meminit.ptr != C_NULL
     @test CC.isMemberInitializer(meminit)
     @test CC.getMember(meminit).ptr == without_init.ptr
-    CC.LLVM.API.LLVMDisposeGenericValue(gv)
+    CC.LLVM.dispose(gv)
 
     dispose(f)
     dispose(I)
@@ -4356,9 +4358,10 @@ end
 
     # IntegerLiteral::Create takes the APInt through the LLVMGenericValueRef bridge
     # (MARSHALLING.md §1), so the value is built as an LLVM generic value first.
-    gv = CC.LLVM.API.LLVMCreateGenericValueOfInt(CC.LLVM.API.LLVMInt32Type(), 42, 0)
+    gv, gv7 = CC.LLVM.Context() do _
+        CC.LLVM.GenericValue(CC.LLVM.Int32Type(), 42), CC.LLVM.GenericValue(CC.LLVM.Int32Type(), 7)
+    end
     lit = CC.IntegerLiteral(ctx, gv, int_ty, loc)
-    gv7 = CC.LLVM.API.LLVMCreateGenericValueOfInt(CC.LLVM.API.LLVMInt32Type(), 7, 0)
     lit7 = CC.IntegerLiteral(ctx, gv7, int_ty, loc)
     @test lit isa CC.IntegerLiteral
     @test lit7 isa CC.IntegerLiteral
@@ -4441,8 +4444,8 @@ end
     @test desc isa String
     @test occursin("42", desc)
 
-    CC.LLVM.API.LLVMDisposeGenericValue(gv)
-    CC.LLVM.API.LLVMDisposeGenericValue(gv7)
+    CC.LLVM.dispose(gv)
+    CC.LLVM.dispose(gv7)
     dispose(f)
     dispose(I)
 end

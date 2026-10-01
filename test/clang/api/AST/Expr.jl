@@ -1409,8 +1409,8 @@ end
     @test CC.getNumSubExprs(sve) == 6
     mask0 = CC.getShuffleMaskIdx(sve, ctx, 0)
     @test mask0 != C_NULL
-    @test CC.LLVM.API.LLVMGenericValueToInt(mask0, false) == 3
-    CC.LLVM.API.LLVMDisposeGenericValue(mask0)
+    @test convert(UInt64, CC.LLVM.GenericValue(mask0)) == 3
+    CC.LLVM.dispose(CC.LLVM.GenericValue(mask0))
     @test_throws AssertionError CC.getShuffleMaskIdx(sve, ctx, 4)
 
     # ---- ExtVectorElementExpr: the encoded accessor --------------------------
@@ -1435,8 +1435,8 @@ end
     @test ail isa CC.ArrayInitLoopExpr
     sz = CC.getArraySize(ail)
     @test sz != C_NULL
-    @test CC.LLVM.API.LLVMGenericValueToInt(sz, false) == 3
-    CC.LLVM.API.LLVMDisposeGenericValue(sz)
+    @test convert(UInt64, CC.LLVM.GenericValue(sz)) == 3
+    CC.LLVM.dispose(CC.LLVM.GenericValue(sz))
 
     # ---- Designator::getSourceRange -----------------------------------------
     # the designators live on the syntactic form, which `subtree` does not walk
@@ -2483,7 +2483,7 @@ end
     @test bits != C_NULL
     CC.setValue(fl, ctx, bits)
     @test CC.getValueAsApproximateDouble(fl) == approx
-    CC.LLVM.API.LLVMDisposeGenericValue(bits)
+    CC.LLVM.dispose(CC.LLVM.GenericValue(bits))
 
     # ---- Expr::EvaluateAsFixedPoint -----------------------------------------
     il = pick(CC.IntegerLiteral)
